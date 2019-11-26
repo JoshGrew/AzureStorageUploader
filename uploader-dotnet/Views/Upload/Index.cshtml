@@ -1,0 +1,48 @@
+﻿@using Azure.Uploader.Models
+@{
+    ViewData["Title"] = "Azure Uploader";
+}
+@model Azure.Uploader.Models.Upload
+
+<div class="g-header">
+    <div class=".g-info__logo img">
+        <img src="" />
+    </div>
+</div>
+<main class="g-main g-options">
+    <div class="g-panel g-panel--100">
+        <article class="g-info">
+            <article class="c-card c-card--highlight">
+                <form method="post" enctype="multipart/form-data" asp-controller="Upload" asp-action="Post" id="input">
+                    <h3 class="c-card__heading">Upload your User-Agents using this form</h3>
+                    <div class="b-form-group">
+                        <input type="file" asp-for="FormFile" id="inputFile" class="b-input b-input--block">
+                    </div>
+                    <p><span asp-validation-for="FormFile" class="b-text--property-pill b-text--red"></span></p>
+                    <p class="b-text--property-pill"> *Supported file formats are xlsx and csv</p>
+                    <div class="b-form-group">
+                        <input type="text" asp-for="Name" class="b-input b-input--block" placeholder="Enter your Name...">
+                    </div>
+                    <p><span asp-validation-for="Name" class="b-text--property-pill b-text--red"> </span></p>
+                    <div class="b-form-group">
+                        <input type="text" asp-for="LicenceKey" class="b-input b-input--block" placeholder="Licence key...">
+                    </div>
+                    <p> <span asp-validation-for="LicenceKey" class="b-text--property-pill b-text--red"> </span></p>
+                    <div class="b-form-group">
+                        <input type="text" asp-for="Email" class="b-input b-input--block" placeholder="Email Address...">
+                    </div>
+                    <p><span asp-validation-for="Email" class="b-text--property-pill b-text--red"> </span></p>
+                    <div class="b-form-group">
+                        <textarea rows="2" style="resize:none;" type="text" asp-for="Notes" class="b-input b-input--block" placeholder="Notes..."></textarea>
+                        <button type="submit" class="b-btn" form="input">Upload</button>
+                    </div>
+                    <div>
+                        <p>@Html.Raw(ViewBag.Response)</p>
+                    </div>
+                </form>
+            </article>
+        </article>
+    </div>
+    <div class="b-form-group">
+    </div>
+</main>
