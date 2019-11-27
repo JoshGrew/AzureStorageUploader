@@ -1,5 +1,4 @@
-﻿using Azure.License.Services;
-using Azure.Uploader.Models;
+﻿using Azure.Uploader.Models;
 using Azure.Uploader.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
@@ -19,7 +18,9 @@ namespace Azure.Uploader.Services
 	/// </summary>
 	public class UploadService : IUploadService
 	{
+		// Segmented options from appsettings required for the upload service
 		private readonly UploadServiceSubOptions _options;
+
 		/// <summary>
 		/// Constructor for the Upload Service
 		/// </summary>
@@ -37,12 +38,7 @@ namespace Azure.Uploader.Services
 			// Collate any responses to display on the form
 			List<string> responses = new List<string>();
 
-			// Validate the licence key supplied and return a list of valid licence ids for use 
-			// with the upload to the storage account
-			var licenseId = LicenceHelper.GetValidLicences(uploadForm.LicenceKey)
-						   .FirstOrDefault()
-						   .LicenceId;
-
+			// Azure storage account
 			CloudStorageAccount storageAccount;
 			// Create a blob name for use with the date and time of the request
 			string _blobName = String.Join("-", "UAs"
@@ -56,7 +52,7 @@ namespace Azure.Uploader.Services
 				try
 				{
 					// Check if the container exists for the license key
-					CloudBlobContainer blobContainer = blobClient.GetContainerReference("####" + licenseId);
+					CloudBlobContainer blobContainer = blobClient.GetContainerReference("####" + uploadForm.LicenceKey);
 					// If it does not exist, create it
 					await blobContainer.CreateIfNotExistsAsync();
 					// Check if there is a blob reference with this name, create if not
@@ -78,11 +74,11 @@ namespace Azure.Uploader.Services
 							"<a href=\"####\">get in touch</a>.");
 					}
 				}
-				catch(Exception ex)
+				catch
 				{
 					responses.Clear();
 					responses.Add( "Failed to upload the file, please " +
-						"<a href=\"####">get in touch</a>.");
+						"<a href=\"####\">get in touch</a>.");
 				}
 			}
 			return responses;
