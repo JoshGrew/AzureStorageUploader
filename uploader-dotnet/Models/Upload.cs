@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Azure.Uploader.Attributes;
+using Azure.Uploader.Services;
 
 namespace Azure.Uploader.Models
 {

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+﻿using Azure.Uploader.Services;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -12,24 +13,26 @@ namespace Azure.Uploader.Attributes
 	/// </summary>
 	public class ValidLicenseAttribute : AttributeBase, IClientModelValidator
     {
-        /// <summary>
-        /// Override method validating the license key
-        /// </summary>
-        /// <param name="value">The object being validated in the model</param>
-        /// // <param name="validationContext">The context in which the validation is performed </param>
-        protected override ValidationResult IsValid(object value,
+		/// <summary>
+		/// Override method validating the license key
+		/// </summary>
+		/// <param name="value">The object being validated in the model</param>
+		/// <param name="validationContext">The context in which the validation is performed </param>
+		protected override ValidationResult IsValid(object value,
                     ValidationContext validationContext)
         {
+			// Use validationContext to retrieve the licence service
+			var service = (ILicenceService)validationContext
+						.GetService(typeof(ILicenceService));
+			
             string license = value as string;
             if (String.IsNullOrWhiteSpace(license) == false)
             {
-                // Get a list of all valid licenses
-                var licenses = LicenceHelper.GetValidLicences(license);
+				// Get a list of all valid licenses
+				var validLicence = service.ValidateLicence(license);
                 // Ensure the license key is valid before uploading to blob storage
-                if (licenses != null && licenses.Count() > 0)
-                {
-                    return ValidationResult.Success;
-                }
+                if (validLicence)
+					return ValidationResult.Success;
             }
             return new ValidationResult(GetErrorMessage());
         }

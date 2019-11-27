@@ -27,7 +27,7 @@ namespace Azure.Uploader
         public void ConfigureServices(IServiceCollection services)
         {
 			services.AddTransient<IUploadService, UploadService>();
-
+			services.AddTransient<ILicenceService, LicenceService>();
 			services.Configure<UploadServiceSubOptions>(Configuration.GetSection("ServiceConfig"));
 
 			services.Configure<CookiePolicyOptions>(options =>
